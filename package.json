@@ -1,0 +1,35 @@
+{
+  "name": "catching-waves",
+  "version": "1.0.0",
+  "description": "Typescript Node.js api",
+  "keywords": [
+    "nodejs",
+    "typescript",
+    "api"
+  ],
+  "homepage": "https://github.com/devCaiodias/catching-waves#readme",
+  "bugs": {
+    "url": "https://github.com/devCaiodias/catching-waves/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devCaiodias/catching-waves.git"
+  },
+  "license": "ISC",
+  "author": "Caio Dias",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "yarn build && node dist/src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/module-alias": "^2.0.4",
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "module-alias": "^2.2.3"
+  }
+}
