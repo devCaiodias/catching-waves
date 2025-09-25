@@ -29,6 +29,7 @@
     "test:functional": "jest --projects ./test --runInBand"
   },
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",
     "@types/module-alias": "^2.0.4",
     "@types/node": "^24.5.2",
@@ -43,6 +44,9 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@overnightjs/core": "^1.7.6",
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
     "module-alias": "^2.2.3"
   }
 }
