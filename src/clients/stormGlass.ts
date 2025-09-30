@@ -1,3 +1,4 @@
+import { InternalError } from "@src/utils/errors/internal-erros";
 import { AxiosStatic } from "axios";
 
 export interface StormGlassPointSource {
@@ -31,15 +32,46 @@ export interface forecastPonit {
 
 }
 
+export class ClientRequestError extends InternalError {
+  constructor(message: string) {
+    const internalMessage = 'Unexpected error when trying to communicate to StormGlass'
+    super(`${internalMessage}: ${message}`)
+  }
+}
+
+export class StormGlassResponseError extends InternalError {
+  constructor(message: string) {
+    const internalMessage = 'Unexpected error returned by the StormGlass service';
+    super(`${internalMessage}: ${message}`)
+  }
+}
+
+// 3259908e-9a4b-11f0-b07a-0242ac130006-32599138-9a4b-11f0-b07a-0242ac130006
+
 export class StormGlass {
   readonly stormGlassApiParams = 'swellDirection,swellHeight,swellPeriod,waveDirection,waveHeight,windDirection,windSpeed'
   readonly stormGlassApiSource = 'noaa'
   constructor(protected request: AxiosStatic) { }
   public async featshPoints(lat: number, lng: number): Promise<forecastPonit[]> {
-    const response = await this.request.get<StormGlassForecastResponse>(
-      `https://api.stormglass.io/v2/weather/point?params=${this.stormGlassApiParams}&source=${this.stormGlassApiSource}&lat=${lat}&lng=${lng}`
-    )
-    return this.normalizeResponse(response.data)
+    try {
+      const response = await this.request.get<StormGlassForecastResponse>(
+        `https://api.stormglass.io/v2/weather/point?lat=${lat}&lng=${lng}&params=${this.stormGlassApiParams}&source=${this.stormGlassApiSource}`,
+        {
+          headers: {
+            Authorization: 'fake-token'
+          }
+        }
+      )
+      return this.normalizeResponse(response.data)
+
+    } catch (err: any) {
+        if (err.response && err.response.status) {
+          throw new StormGlassResponseError(`Error: ${JSON.stringify(err.response.data)} Code: ${
+            err.response.status
+          }`)
+        }
+        throw new ClientRequestError(err.message)
+    }
   }
 
   private normalizeResponse(points: StormGlassForecastResponse): forecastPonit[] {
